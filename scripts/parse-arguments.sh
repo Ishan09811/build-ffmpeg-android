@@ -37,11 +37,6 @@ SUPPORTED_LIBRARIES_GPL=(
   "libx265"
 )
 
-DISABLING_LIBRARIES=(
-  " --disable-programs"
-  " --disable-doc"
-)
-
 for argument in "$@"; do
   case $argument in
   # Build for only specified ABIs (separated by comma)
@@ -139,10 +134,10 @@ for argument in "$@"; do
     FFMPEG_GPL_ENABLED=true
     ;;
   --disable-programs)
-    DISABLED_LIBRARIES+="${DISABLING_LIBRARIES[@]}"
+    DISABLED_LIBRARIES+=("--disable-programs")
     ;;
   --disable-doc)
-    DISABLED_LIBRARIES+="${DISABLING_LIBRARIES[@]}"
+    DISABLED_LIBRARIES+=("--disable-doc")
     ;;
   *)
     echo "Unknown argument $argument"
