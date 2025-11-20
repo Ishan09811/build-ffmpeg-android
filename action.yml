@@ -1,0 +1,39 @@
+name: "FFmpeg Android Builder"
+description: "Build FFmpeg for Android"
+author: "Ishan09811 & Javernaut(creator of the actual script)"
+
+inputs:
+  android-api:
+    description: "Android API level"
+    required: false
+    default: "34"
+
+  abis:
+    description: "list of ABIs"
+    required: false
+    default: "arm64-v8a"
+
+  extra-args:
+    description: "Additional flags passed to FFmpeg"
+    required: false
+    default: ""
+
+runs:
+  using: "composite"
+  steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Build FFmpeg
+      shell: bash
+      run: |
+        chmod +x ./ffmpeg-android-maker.sh
+        ./ffmpeg-android-maker.sh \
+          -android=${{ inputs.android-api }} \
+          -abis=${{ inputs.abis }} \
+          ${{ inputs.extra-args }}
+
+outputs:
+  output-path:
+    description: "Path where built libraries and include files are stored"
+    value: "./output"
