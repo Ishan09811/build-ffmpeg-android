@@ -13,6 +13,11 @@ inputs:
     required: false
     default: "arm64-v8a"
 
+  output-dir:
+    description: "Directory where FFmpeg will output its build result"
+    required: false
+    default: "./output"
+
   extra-args:
     description: "Additional flags passed to FFmpeg"
     required: false
@@ -33,7 +38,11 @@ runs:
           -abis=${{ inputs.abis }} \
           ${{ inputs.extra-args }}
 
+        if [ "${{ inputs.output-dir }}" != "./output" ]; then
+          mv ./output "${{ inputs.output-dir }}"
+        fi
+
 outputs:
   output-path:
     description: "Path where built libraries and include files are stored"
-    value: "./output"
+    value: ${{ inputs.output-dir }}
