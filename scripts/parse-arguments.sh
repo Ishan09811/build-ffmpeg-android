@@ -11,6 +11,7 @@ API_LEVEL=21
 SOURCE_TYPE=TAR
 SOURCE_VALUE=7.1.2
 EXTERNAL_LIBRARIES=()
+DISABLED_LIBRARIES=()
 FFMPEG_GPL_ENABLED=false
 
 # All FREE libraries that are supported
@@ -34,6 +35,11 @@ SUPPORTED_LIBRARIES_FREE=(
 SUPPORTED_LIBRARIES_GPL=(
   "libx264"
   "libx265"
+)
+
+DISABLING_LIBRARIES=(
+  " --disable-programs"
+  " --disable-doc"
 )
 
 for argument in "$@"; do
@@ -132,6 +138,12 @@ for argument in "$@"; do
     EXTERNAL_LIBRARIES+=" ${SUPPORTED_LIBRARIES_GPL[@]}"
     FFMPEG_GPL_ENABLED=true
     ;;
+  --disable-programs)
+    DISABLED_LIBRARIES+="${DISABLING_LIBRARIES[@]}"
+    ;;
+  --disable-doc)
+    DISABLED_LIBRARIES+="${DISABLING_LIBRARIES[@]}"
+    ;;
   *)
     echo "Unknown argument $argument"
     ;;
@@ -155,6 +167,9 @@ export FFMPEG_SOURCE_VALUE=$SOURCE_VALUE
 # A list of external libraries to build into the FFmpeg
 # Elements from this list are used for strings substitution
 export FFMPEG_EXTERNAL_LIBRARIES=${EXTERNAL_LIBRARIES[@]}
+
+# A list of disabled libraries or options 
+export FFMPEG_DISABLED_LIBRARIES=${DISABLED_LIBRARIES[@]}
 
 # Desired Android API level to use during compilation
 # Will be replaced with 21 for 64bit ABIs if the value is less than 21
