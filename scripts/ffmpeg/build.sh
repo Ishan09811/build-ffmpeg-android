@@ -21,6 +21,11 @@ do
   ADDITIONAL_COMPONENTS+=" --enable-$LIBARY_NAME"
 done
 
+for NAME in ${FFMPEG_DISABLED_LIBRARIES[@]}
+do
+  ADDITIONAL_COMPONENTS+="$NAME"
+done
+
 # Referencing dependencies without pkgconfig
 DEP_CFLAGS="-I${BUILD_DIR_EXTERNAL}/${ANDROID_ABI}/include"
 DEP_LD_FLAGS="-L${BUILD_DIR_EXTERNAL}/${ANDROID_ABI}/lib $FFMPEG_EXTRA_LD_FLAGS"
