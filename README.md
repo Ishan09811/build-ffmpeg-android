@@ -50,6 +50,8 @@ You can then link these in your CMakeLists.
 #### Action Inputs
 Input | Description | Default
 |-|-|-|
+| `sdk-path` | Android SDK path | `ANDROID_HOME`
+| `ndk-path` | Android NDK path | `ANDROID_NDK_HOME`
 | `android-api` | Android API level for NDK build | `34`
 | `abis` | list of ABIs (arm64-v8a, armeabi-v7a, etc.) | `arm64-v8a`
 | `output-dir` | Directory where built FFmpeg libraries and include files will be stored | `./output`
