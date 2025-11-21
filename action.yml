@@ -37,11 +37,25 @@ inputs:
     required: false
     default: ""
 
+  version:
+    description: "Version of FFmpeg"
+    required: false
+    default: "7.1.2"
+
 runs:
   using: "composite"
   steps:
     - name: Checkout
       uses: actions/checkout@v4
+
+    - name: Setup Cache
+      uses: actions/cache@v4
+      with:
+        path: |
+          ${GITHUB_ACTION_PATH}/output
+        key: ffmpeg-${{ inputs.version }}-${{ inputs.abis }}-${{ inputs.android-api }}-${{ hashFiles('${GITHUB_ACTION_PATH}/ffmpeg-android-maker.sh') }}
+        restore-keys: |
+          ffmpeg-${{ inputs.version }}-${{ inputs.abis }}-${{ inputs.android-api }}-
 
     - name: Build FFmpeg
       shell: bash
@@ -49,12 +63,17 @@ runs:
         chmod +x ${GITHUB_ACTION_PATH}/ffmpeg-android-maker.sh
         export ANDROID_SDK_HOME=${{ inputs.sdk-path }}
         export ANDROID_NDK_HOME=${{ inputs.ndk-path }}
-        ${GITHUB_ACTION_PATH}/ffmpeg-android-maker.sh \
-          -android=${{ inputs.android-api }} \
-          -abis=${{ inputs.abis }} \
-          ${{ inputs.extra-args }}
+        
+        if [ -d "${GITHUB_ACTION_PATH}/output" ]; then
+          echo "Using cached FFmpeg build"
+        else
+          ${GITHUB_ACTION_PATH}/ffmpeg-android-maker.sh \
+            -android=${{ inputs.android-api }} \
+            -abis=${{ inputs.abis }} \
+            ${{ inputs.extra-args }}
+        fi
 
-        if [ "${{ inputs.output-dir }}" != "./output" ]; then
+        if [ "${{ inputs.output-dir }}" != "${GITHUB_ACTION_PATH}/output" ]; then
           mv ${GITHUB_ACTION_PATH}/output "${{ inputs.output-dir }}"
         fi
 
