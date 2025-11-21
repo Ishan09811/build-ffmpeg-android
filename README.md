@@ -42,8 +42,9 @@ After this step finishes, your project will contain:
 <output-dir>
  └── output/
       ├── include/
+        └──  ABI eg. arm64v8a/
       └── lib/
-         └── ABI eg. arm64v8a/
+        └── ABI eg. arm64v8a/
 ```
 
 You can then link these in your CMakeLists.
