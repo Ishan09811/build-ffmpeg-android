@@ -2,6 +2,10 @@ name: "FFmpeg Android Builder"
 description: "Build FFmpeg for Android"
 author: "Ishan09811 & Javernaut(creator of the actual script)"
 
+branding:
+  icon: "gear"
+  color: "purple"
+  
 inputs:
   sdk-path:
     description: "Android SDK path"
