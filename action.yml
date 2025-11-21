@@ -64,7 +64,7 @@ runs:
         export ANDROID_SDK_HOME=${{ inputs.sdk-path }}
         export ANDROID_NDK_HOME=${{ inputs.ndk-path }}
         
-        if [ -d "${GITHUB_ACTION_PATH}/output" ]; then
+        if [ -d "${{ inputs.output-dir }}" ]; then
           echo "Using cached FFmpeg build"
         else
           ${GITHUB_ACTION_PATH}/ffmpeg-android-maker.sh \
