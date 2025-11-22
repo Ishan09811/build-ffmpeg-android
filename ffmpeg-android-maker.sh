@@ -98,6 +98,9 @@ do
 done
 
 # Main build loop
+TOTAL_COMPONENTS=${#COMPONENTS_TO_BUILD[@]}
+INDEX=0
+
 for ABI in ${FFMPEG_ABIS_TO_BUILD[@]}
 do
   # Exporting variables for the current ABI
@@ -105,14 +108,17 @@ do
 
   for COMPONENT in ${COMPONENTS_TO_BUILD[@]}
   do
-    echo "Building the component: ${COMPONENT}"
+    INDEX=$((INDEX + 1))
+    
+    PERCENT=$(( INDEX * 100 / TOTAL_COMPONENTS ))
+    echo -ne "[${ABI}] Building ${COMPONENT} ... ${PERCENT}%\r"
     COMPONENT_SOURCES_DIR_VARIABLE=SOURCES_DIR_${COMPONENT}
 
     # Going to the actual source code directory of the current component
     cd ${!COMPONENT_SOURCES_DIR_VARIABLE}
 
     # and executing the component-specific build script
-    source ${SCRIPTS_DIR}/${COMPONENT}/build.sh || exit 1
+    source ${SCRIPTS_DIR}/${COMPONENT}/build.sh > /dev/null 2>&1 || exit 1
 
     # Returning to the root directory. Just in case.
     cd ${BASE_DIR}
