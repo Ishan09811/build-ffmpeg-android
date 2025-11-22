@@ -17,7 +17,22 @@ function downloadTarArchive() {
   echo "Ensuring sources of ${LIBRARY_NAME} in ${LIBRARY_SOURCES}"
 
   if [[ ! -d "$LIBRARY_SOURCES" ]]; then
-    curl -LO ${DOWNLOAD_URL}
+
+    TOTAL_SIZE=$(curl -sI "$DOWNLOAD_URL" | awk '/Content-Length/ {print $2}' | tr -d '\r')
+    
+    curl -L --silent "$DOWNLOAD_URL" -o "$ARCHIVE_NAME" &
+    CURL_PID=$!
+
+    while kill -0 "$CURL_PID" 2>/dev/null; do
+      if [[ -f "$ARCHIVE_NAME" ]]; then
+        CUR_SIZE=$(stat -c%s "$ARCHIVE_NAME" 2>/dev/null)
+        PERCENT=$(( CUR_SIZE * 100 / TOTAL_SIZE ))
+        echo -ne "\r$ARCHIVE_NAME Progress: ${PERCENT}%"
+      fi
+      sleep 0.2
+    done
+
+    echo -e "\r$ARCHIVE_NAME Progress: 100%"
 
     EXTRACTION_DIR="."
     if [ "$NEED_EXTRA_DIRECTORY" = true ] ; then
